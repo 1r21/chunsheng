@@ -1,0 +1,14 @@
+html {
+  background-color: beige;
+  font-size: 1.5rem;
+  box-sizing: border-box;
+}
+
+ul,
+li {
+  list-style: none;
+  padding: 0;
+}
+p {
+  text-align: justify;
+}

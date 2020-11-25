@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>I Believe</title>
+    <link
+      rel="stylesheet"
+      href="//at.alicdn.com/t/font_2188556_64910ajbwpg.css"
+    />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+    <script>
+      (function () {
+        document.addEventListener(
+          "DOMContentLoaded",
+          function () {
+            const html = document.documentElement;
+            let windowWidth = html.clientWidth;
+            const dpr = window.devicePixelRatio || 1;
+            if (windowWidth > 640) windowWidth = 640;
+            if (windowWidth < 320) windowWidth = 320;
+            html.style.fontSize = windowWidth / 7.5 / dpr + "px";
+          },
+          false
+        );
+      })();
+    </script>
+  </body>
+</html>
