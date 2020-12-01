@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  chunsheng:
+    build: .
+    image: taishan-web:alpine
+    container_name: webapp
+    volumes:
+      - ./nginx.conf:/etc/nginx/templates/default.conf.template
+    ports:
+      - "80:80"
+    environment:
+      - API_SERVER=http://0.0.0.0:8000

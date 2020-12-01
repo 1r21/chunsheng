@@ -5,7 +5,7 @@
       from: <a href="https://www.pbs.org/newshour/latest">pbs</a>
     </p>
   </div>
-  <audio :src="audio.src" @ended="ended" ref="audio"></audio>
+  <audio src="blob:https://player.pbs.org/045f1b11-f00e-4ae6-afd9-7deee7791b60" @ended="ended" ref="audio"></audio>
   <div class="player">
     <i class="iconfont i-play" v-if="paused" @click="play" />
     <i class="iconfont i-pause" v-else @click="pause" />
