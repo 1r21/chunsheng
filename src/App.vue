@@ -1,14 +1,17 @@
 <template>
-  <div class="transcript">
-    <div v-html="audio.transcript" />
-    <p v-show="audio.transcript">
-      from: <a href="https://www.pbs.org/newshour/latest">pbs</a>
-    </p>
-  </div>
-  <audio src="blob:https://player.pbs.org/045f1b11-f00e-4ae6-afd9-7deee7791b60" @ended="ended" ref="audio"></audio>
-  <div class="player">
-    <i class="iconfont i-play" v-if="paused" @click="play" />
-    <i class="iconfont i-pause" v-else @click="pause" />
+  <div>
+    <div class="transcript" v-if="audio?.transcript">
+      <div v-html="audio?.transcript" />
+      <p v-show="audio?.transcript">
+        from: <a href="https://www.pbs.org/newshour/latest">pbs</a>
+      </p>
+    </div>
+    <div v-else>No Data</div>
+    <audio :src="audio?.src" @ended="ended" ref="audio"></audio>
+    <div class="player" v-if="audio?.src">
+      <i class="iconfont i-play" v-if="paused" @click="play" />
+      <i class="iconfont i-pause" v-else @click="pause" />
+    </div>
   </div>
 </template>
 
@@ -21,19 +24,23 @@ export default {
     return {
       audioEl: null,
       paused: true,
-      audio: {},
+      audio: null,
     };
   },
   async mounted() {
     this.audioEl = this.$refs.audio;
     const { list } = await getNews();
-    const [first] = list;
-    this.audio = first;
+    if (this.list) {
+      const [first] = list;
+      this.audio = first;
+    }
   },
   methods: {
     play() {
-      this.audioEl.play();
-      this.paused = false;
+      if (this.audio) {
+        this.audioEl.play();
+        this.paused = false;
+      }
     },
     pause() {
       this.audioEl.pause();

@@ -12,9 +12,13 @@ axios.interceptors.request.use(
 
 // Add a response interceptor
 axios.interceptors.response.use((response) => {
-  const { status, data } = response;
+  const { status, data: res } = response;
   if (status === 200) {
-    return data;
+    const { code, messge, data } = res;
+    if (code === 0) {
+      return data;
+    }
+    return Promise.reject(messge);
   }
   return Promise.reject("error");
 });

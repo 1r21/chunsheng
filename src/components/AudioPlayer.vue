@@ -129,7 +129,7 @@ button {
   width: 90%;
   justify-content: space-between;
   margin: 0 auto;
-  font-size: .8rem;
+  font-size: 0.8rem;
   color: #777;
 }
 .progress {
