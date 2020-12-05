@@ -6,7 +6,8 @@
         from: <a href="https://www.pbs.org/newshour/latest">pbs</a>
       </p>
     </div>
-    <div v-else>No Data</div>
+    <div v-else-if="loading" class="center">loading</div>
+    <div v-else class="center">No Data</div>
     <audio :src="audio?.src" @ended="ended" ref="audio"></audio>
     <div class="player" v-if="audio?.src">
       <i class="iconfont i-play" v-if="paused" @click="play" />
@@ -22,18 +23,22 @@ export default {
   name: "App",
   data() {
     return {
+      loading: false,
       audioEl: null,
       paused: true,
       audio: null,
     };
   },
   async mounted() {
+    // console.log('123123')
     this.audioEl = this.$refs.audio;
+    this.loading = true;
     const { list } = await getNews();
-    if (this.list) {
+    if (list) {
       const [first] = list;
       this.audio = first;
     }
+    this.loading = false;
   },
   methods: {
     play() {
@@ -65,6 +70,10 @@ export default {
   color: #999;
   text-decoration: underline;
   font-style: italic;
+}
+.center {
+  text-align: center;
+  margin-top: 50%;
 }
 .player {
   position: fixed;
