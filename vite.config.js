@@ -4,10 +4,9 @@ export default {
   alias: {
     "/@/": path.resolve(__dirname, "src"),
   },
-  // support optional chain
+  // support optional chain [build]
   esbuildTarget: "es2015",
   proxy: {
-    // with options
     "/api": {
       target: "http://0.0.0.0:8080/api",
       changeOrigin: true,
