@@ -9,7 +9,11 @@
     <div v-else-if="loading" class="center">loading</div>
     <div v-else class="center">No Data</div>
     <audio :src="audio?.src" @ended="ended" ref="audio"></audio>
-    <div class="player" v-if="audio?.src">
+    <div
+      class="player"
+      v-if="audio?.src"
+      :style="{ backgroundImage: `url(${audio?.cover})` }"
+    >
       <i class="iconfont i-play" v-if="paused" @click="play" />
       <i class="iconfont i-pause" v-else @click="pause" />
     </div>
@@ -30,7 +34,6 @@ export default {
     };
   },
   async mounted() {
-    // console.log('123123')
     this.audioEl = this.$refs.audio;
     this.loading = true;
     const { list } = await getNews();
@@ -81,9 +84,11 @@ export default {
   right: 2rem;
   background-color: #ccc;
   border-radius: 2px;
+  background-size: cover;
 }
 .player .iconfont {
   display: flex;
   font-size: 2rem;
+  color: #fff;
 }
 </style>
