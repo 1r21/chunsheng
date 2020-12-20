@@ -1,7 +1,7 @@
 import axios from "axios";
 
 axios.defaults.baseURL = "/api";
-// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+// axios.defaults.headers.common['X-Token'] = AUTH_TOKEN;
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 // Add a request interceptor
@@ -14,11 +14,11 @@ axios.interceptors.request.use(
 axios.interceptors.response.use((response) => {
   const { status, data: res } = response;
   if (status === 200) {
-    const { code, messge, data } = res;
+    const { code, message, data } = res;
     if (code === 0) {
       return data;
     }
-    return Promise.reject(messge);
+    return Promise.reject(message);
   }
   return Promise.reject("error");
 });
