@@ -26,7 +26,7 @@ export async function getNewsById(id: string) {
 }
 
 export async function translate(q: string) {
-  return request.post<null, { list: Translation[] }>("/translate", {
+  return request.post<null, { list: Translation[] | null }>("/translate", {
     q,
   });
 }

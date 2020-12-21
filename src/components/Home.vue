@@ -1,5 +1,5 @@
 <template>
-  <Loading :loading="loading">
+  <Loading :loading="loading" size="large">
     <div class="article-list">
       <router-link
         custom
@@ -15,6 +15,7 @@
   </Loading>
 </template>
 <script lang="ts">
+import { changeTitle } from "/@/utils";
 import { getNews, translate, News } from "/@/services";
 import Loading from "/@/components/Loading.vue";
 import Article from "/@/components/Article.vue";
@@ -32,11 +33,11 @@ export default {
     };
   },
   async mounted() {
-    document.title = "I Believe";
     this.loading = true;
     const { list } = await getNews();
     this.list = list;
     this.loading = false;
+    changeTitle("I Believe");
   },
 };
 </script>

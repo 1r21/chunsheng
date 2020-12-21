@@ -1,5 +1,5 @@
 <template>
-  <Loading :loading="loading" :error="exceptionText">
+  <Loading :loading="loading" :error="exceptionText" size="large">
     <div
       class="transcript"
       @contextmenu.prevent="getContextmenu"
@@ -18,33 +18,28 @@
         <i class="iconfont i-home" @click="navigate" />
       </router-link>
     </div>
-    <div
-      v-show="tBtnVisible"
-      class="translate-btn"
-      :style="{ top: `${tBtnTop}px`, left: `${tBtnLeft}px` }"
-      @click="showTranslation"
-    >
-      <i class="iconfont i-fanyi" />
-    </div>
-    <div
-      class="translate-wrap"
-      v-if="translationVisible"
-      :style="{ top: `${tBtnTop}px`, left: `${tBtnLeft}px` }"
-    >
-      <div v-show="translateLoading">translating...</div>
-      <div v-show="!translateLoading">{{ translation && translation.dst }}</div>
-    </div>
+    <TranslateBox
+      :text="translateText"
+      :position="translatePos"
+      :visible="translateVisible"
+      :btnVisible="translateBtnVisible"
+      @show="translateVisible = true"
+      @hide="translateBtnVisible = false"
+    />
   </Loading>
 </template>
 
 <script lang="ts">
+import { changeTitle } from "/@/utils";
 import { News, Translation, getNewsById, translate } from "/@/services";
 import Loading from "/@/components/Loading.vue";
+import TranslateBox from "/@/components/TranslateBox.vue";
 
 export default {
   name: "Detail",
   components: {
     Loading,
+    TranslateBox,
   },
   data() {
     return {
@@ -53,13 +48,10 @@ export default {
       audioEl: <HTMLAudioElement>{},
       paused: true,
       article: <News>{},
-      tBtnTop: 0,
-      tBtnLeft: 0,
-      tBtnVisible: false,
-      selectText: "",
-      translateLoading: false,
-      translation: <Translation | null>{},
-      translationVisible: false,
+      translatePos: {},
+      translateText: "",
+      translateVisible: false,
+      translateBtnVisible: false,
     };
   },
   async mounted() {
@@ -70,11 +62,11 @@ export default {
       if (article) {
         const { date, title } = article;
         this.article = article;
-        document.title = `(${date}) ${title}`;
+        changeTitle(`(${date}) ${title}`);
       }
     } catch (error) {
       this.exceptionText = error;
-      document.title = error;
+      changeTitle(typeof error === "string" ? error : "error");
     }
     this.loading = false;
     this.$nextTick(() => {
@@ -99,35 +91,21 @@ export default {
       this.paused = true;
     },
     getContextmenu(e: MouseEvent) {
-      this.translationVisible = false;
       const { x, y } = e;
-      this.tBtnLeft = x;
-      this.tBtnTop = y + 12;
+      this.translatePos = { x, y };
       const selection = window.getSelection();
       if (selection) {
         const range = selection.getRangeAt(0);
         const txt = String(range);
         if (txt) {
-          this.selectText = txt;
-          this.tBtnVisible = true;
+          this.translateText = txt;
+          this.translateBtnVisible = true;
         }
       }
     },
-    hideTranslate(e: Event) {
-      this.tBtnVisible = false;
-      this.translationVisible = false;
-    },
-    async showTranslation() {
-      this.translationVisible = true;
-      this.translateLoading = true;
-      this.translation = null;
-      this.tBtnVisible = false;
-      const { list } = await translate(this.selectText);
-      if (list.length > 0) {
-        const [first] = list;
-        this.translation = first;
-      }
-      this.translateLoading = false;
+    hideTranslate() {
+      this.translateVisible = false;
+      this.translateBtnVisible = false;
     },
   },
 };

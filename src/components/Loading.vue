@@ -1,6 +1,6 @@
 <template>
   <div class="loading-wrap" v-if="loading || error">
-    <i v-if="loading" class="iconfont i-loading"></i>
+    <i v-if="loading" :class="['iconfont', 'loading', `i-${icon}`, size]"></i>
     <span v-else-if="error" class="error">{{ error }}</span>
   </div>
   <slot v-else></slot>
@@ -9,6 +9,14 @@
 export default {
   name: "Loading",
   props: {
+    icon: {
+      default: "loading",
+      type: String,
+    },
+    size: {
+      default: "default",
+      type: String,
+    },
     loading: Boolean,
     error: String,
   },
@@ -23,9 +31,20 @@ export default {
   justify-content: center;
 }
 
-.i-loading {
-  font-size: 2.4rem;
+.loading {
   animation: rotate 0.8s linear infinite;
+}
+
+.loading.default {
+  font-size: 2.4rem;
+}
+
+.loading.small {
+  font-size: 1rem;
+}
+
+.loading.large {
+  font-size: 3.2rem;
 }
 
 .error {
