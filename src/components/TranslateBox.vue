@@ -3,7 +3,7 @@
     <i class="iconfont i-fanyi" v-show="btnVisible" @click="showTranslation" />
     <div class="content" v-if="visible">
       <Loading :loading="loading" icon="translater" size="small">
-        <div v-if="translation">No result</div>
+        <div v-if="!translation">No result</div>
         <template v-else>
           <p class="before">
             <span>S: </span>
