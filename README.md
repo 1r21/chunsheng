@@ -5,5 +5,5 @@
 - `yarn dev`
 
 ## deploy
-`yarn build`
-`docker-compose up -d`
+- `yarn build`
+- `docker-compose up -d`
