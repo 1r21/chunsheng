@@ -58,11 +58,11 @@ export default {
   },
   computed: {
     pos() {
-      const { width: winWidth, height: winHeight } = window.screen;
+      const { clientWidth, clientHeight } = document.body;
       const { x: left = 0, y: top = 0 } = <Pos>this.position;
 
-      const deltaX = winWidth - left;
-      const deltaY = winHeight - top;
+      const deltaX = clientWidth - left;
+      const deltaY = clientHeight - top;
 
       const btnHeight = 40;
       const topY = top > btnHeight ? top - btnHeight : top;
@@ -85,10 +85,11 @@ export default {
       this.$emit("hide");
       this.$emit("show");
       this.loading = true;
-      this.translation = { src: "", dst: "" };
+      this.translation = null;
       const { list } = await translate(this.text);
       if (list && list.length > 0) {
         const [first] = list;
+        console.log(first);
         this.translation = first;
       }
       this.loading = false;
