@@ -1,8 +1,8 @@
 <template>
   <div class="translate" :style="pos">
     <i class="iconfont i-fanyi" v-show="btnVisible" @click="showTranslation" />
-    <div class="content" v-if="visible">
-      <Loading :loading="loading" icon="translater" size="small">
+    <Loading :loading="loading" icon="translater" size="small">
+      <div class="content" v-if="visible">
         <div v-if="!translation">No result</div>
         <template v-else>
           <p class="before">
@@ -14,8 +14,8 @@
             <span>{{ translation.dst }}</span>
           </p>
         </template>
-      </Loading>
-    </div>
+      </div>
+    </Loading>
   </div>
 </template>
 <script lang="ts">
@@ -59,23 +59,25 @@ export default {
   computed: {
     pos() {
       const { width: winWidth, height: winHeight } = window.screen;
-      const { x, y } = <Pos>this.position;
-      const offsetTop = 30;
-      const left = x;
-      const top = y - offsetTop;
+      const { x: left = 0, y: top = 0 } = <Pos>this.position;
+
       const deltaX = winWidth - left;
       const deltaY = winHeight - top;
 
+      const btnHeight = 40;
+      const topY = top > btnHeight ? top - btnHeight : top;
+      const bottomY = deltaY + btnHeight / 2;
+
       if (deltaX <= left && deltaY <= top) {
-        return { bottom: `${deltaY}px`, right: `${deltaX}px` };
+        return { bottom: `${bottomY}px`, right: `${deltaX}px` };
       }
       if (deltaX <= left) {
-        return { top: `${top}px`, right: `${deltaX}px` };
+        return { top: `${topY}px`, right: `${deltaX}px` };
       }
       if (deltaY <= top) {
-        return { bottom: `${deltaY}px`, left: `${left}px` };
+        return { bottom: `${bottomY}px`, left: `${left}px` };
       }
-      return { top: `${top}px`, left: `${left}px` };
+      return { top: `${topY}px`, left: `${left}px` };
     },
   },
   methods: {
