@@ -65,8 +65,9 @@ export default {
         changeTitle(`(${date}) ${title}`);
       }
     } catch (error) {
-      this.exceptionText = error;
-      changeTitle(typeof error === "string" ? error : "error");
+      const errMsg = typeof error === "string" ? error : "error";
+      this.exceptionText = errMsg;
+      changeTitle(errMsg);
     }
     this.loading = false;
     this.$nextTick(() => {
