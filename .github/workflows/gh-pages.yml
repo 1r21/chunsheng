@@ -27,9 +27,10 @@ jobs:
       - name: Build
         env:
           VITE_API: ${{ secrets.VITE_API }}
+          BASE_URL: ${{ secrets.BASE_URL }} 
         run: |
           yarn
-          yarn build --base=/chunsheng/
+          yarn build --base=$BASE_URL
           
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
