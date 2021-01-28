@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta property="og:title" content="I Believe" />
     <meta property="og:url" content="http://ai.chenggang.win" />
-    <meta property="og:image" content="http://ai.chenggang.win/favicon.ico" />
+    <meta property="og:image" content="http://ai.chenggang.win/logo.png" />
     <meta
       property="og:description"
       content="English infomation,news,songs etc,it is very interesting,learning for fun!"
@@ -26,6 +26,15 @@
     </script> -->
     <script type="module" src="/src/main.ts"></script>
     <script>
+      // http://www.backalleycoder.com/2016/05/13/sghpa-the-single-page-app-hack-for-github-pages/
+      (function(){
+        const redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect != location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+      
       (function () {
         document.addEventListener(
           "DOMContentLoaded",
