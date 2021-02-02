@@ -1,14 +1,21 @@
-html {
-  font-size: 1.3rem;
+html,
+body {
+  height: 100%;
   box-sizing: border-box;
   background-color: #fff;
 }
 
-html,
-body,
 #app {
   height: 100%;
-  overflow: hidden;
+  margin: 0 auto;
+  font-size: 1.3rem;
+}
+
+@media screen and (min-width: 1024px) {
+  #app {
+    max-width: 640px;
+    font-size: 0.8rem;
+  }
 }
 
 ul,

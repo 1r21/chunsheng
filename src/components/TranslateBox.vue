@@ -58,7 +58,7 @@ export default {
   },
   computed: {
     pos() {
-      const { clientWidth, clientHeight } = document.body;
+      const { clientWidth, clientHeight } = document.documentElement;
       const { x: left = 0, y: top = 0 } = <Pos>this.position;
 
       const deltaX = clientWidth - left;
@@ -106,12 +106,12 @@ export default {
 .translate > .i-fanyi {
   color: #666;
   padding: 0.05rem 0.1rem;
-  font-size: 1.2rem;
+  font-size: 1.2em;
 }
 .content {
   color: #999;
   max-height: 15rem;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   padding: 0.1rem 0.2rem;
   line-height: 1.4;
   overflow: auto;

@@ -16,7 +16,7 @@
 </template>
 <script lang="ts">
 import { changeTitle } from "/@/utils";
-import { getNews, translate, News } from "/@/services";
+import { getNews, News } from "/@/services";
 import Loading from "/@/components/Loading.vue";
 import Article from "/@/components/Article.vue";
 

@@ -3,6 +3,7 @@
     <div
       class="transcript"
       @contextmenu.prevent="getContextmenu"
+      @click="hideTranslate"
       @touchstart="hideTranslate"
     >
       <div v-html="article.transcript" />
@@ -31,7 +32,7 @@
 
 <script lang="ts">
 import { changeTitle } from "/@/utils";
-import { News, Translation, getNewsById, translate } from "/@/services";
+import { News, getNewsById } from "/@/services";
 import Loading from "/@/components/Loading.vue";
 import TranslateBox from "/@/components/TranslateBox.vue";
 
@@ -121,7 +122,7 @@ export default {
 <style scoped>
 .transcript {
   position: relative;
-  font-size: 0.9rem;
+  font-size: 0.9em;
   color: #666;
   text-indent: 2em;
   padding: 0.5rem 1rem;
@@ -129,7 +130,7 @@ export default {
 }
 .transcript > .footer {
   text-align: right;
-  font-size: 0.5rem;
+  font-size: 0.5em;
   color: #999;
   text-decoration: underline;
   font-style: italic;
@@ -151,23 +152,5 @@ export default {
 }
 .action .i-home {
   color: #ffa500;
-}
-.translate-btn {
-  position: fixed;
-  padding: 0.05rem 0.1rem;
-  background-color: #fefefe;
-  border-radius: 0.1rem;
-}
-.translate-btn > .i-fanyi {
-  color: #666;
-  font-size: 1.2rem;
-}
-.translate-wrap {
-  position: fixed;
-  color: #999;
-  padding: 0.3rem;
-  font-size: 0.74rem;
-  background-color: #fefefe;
-  border-radius: 0.1rem;
 }
 </style>

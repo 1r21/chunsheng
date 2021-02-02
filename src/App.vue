@@ -11,8 +11,6 @@ export default {
 </script>
 <style scoped>
 .container {
-  margin: 0 auto;
   height: 100%;
-  overflow: auto;
 }
 </style>
