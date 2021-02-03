@@ -6,7 +6,21 @@
       @click="hideTranslate"
       @touchstart="hideTranslate"
     >
-      <div v-html="article.transcript" />
+      <template v-for="item in texts" :key="item.type + item.value">
+        <p class="title" v-if="item.type === 'title'">{{ item.value }}</p>
+        <template v-else>
+          <p class="text">
+            <span>{{ item.value }}</span>
+            <span>
+              <i
+                class="iconfont i-translater"
+                @click="doTranslate(item.value, item.trans)"
+              />
+            </span>
+          </p>
+          <p class="text trans" v-show="item.trans">{{ item.trans }}</p>
+        </template>
+      </template>
       <p v-show="article.transcript" class="footer">
         from: <a :href="article.src">pbs</a>
       </p>
@@ -31,8 +45,8 @@
 </template>
 
 <script lang="ts">
-import { changeTitle } from "/@/utils";
-import { News, getNewsById } from "/@/services";
+import { changeTitle, entityMap } from "/@/utils";
+import { News, getNewsById, translate } from "/@/services";
 import Loading from "/@/components/Loading.vue";
 import TranslateBox from "/@/components/TranslateBox.vue";
 
@@ -49,6 +63,7 @@ export default {
       audioEl: <HTMLAudioElement>{},
       paused: true,
       article: <News>{},
+      texts: <{ type: string; value: string; trans?: string }[]>[],
       translatePos: {},
       translateText: "",
       translateVisible: false,
@@ -63,6 +78,7 @@ export default {
       if (article) {
         const { date, title } = article;
         this.article = article;
+        this.parseText(article);
         changeTitle(`(${date}) ${title}`);
       }
     } catch (error) {
@@ -109,28 +125,85 @@ export default {
       this.translateVisible = false;
       this.translateBtnVisible = false;
     },
+    parseText(article: News) {
+      let content = article.transcript.replace(/(\r\n|\n|\r)/gm, "");
+      for (let key in entityMap) {
+        const re = new RegExp("&" + key + ";", "g");
+        content = content.replace(re, entityMap[key]);
+      }
+      const hReg = /<p[^>]*>(.*?)<\/p>/gm;
+      const texts = content.match(hReg);
+
+      if (texts) {
+        this.texts = texts.map((item) => {
+          if (item.includes("</strong>")) {
+            const tRe = /<p><strong[^>]*>(.*?)<\/strong><\/p>/g;
+            return {
+              type: "title",
+              value: item.replace(tRe, "$1"),
+            };
+          }
+          return {
+            type: "text",
+            value: item.replace(/<p[^>]*>(.*?)<\/p>/g, "$1"),
+          };
+        });
+      }
+    },
+    async doTranslate(text: string, trans: string) {
+      if (trans) {
+        this.texts = this.texts.map((item) => {
+          if (item.value === text) {
+            item.trans = "";
+            return item;
+          }
+          return item;
+        });
+      } else {
+        const { list } = await translate(text);
+        if (list && list.length > 0) {
+          const [first] = list;
+          this.texts = this.texts.map((item) => {
+            if (item.value === text) {
+              item.trans = first.dst;
+              return item;
+            }
+            return item;
+          });
+        }
+      }
+    },
   },
 };
 </script>
-<style>
-.transcript .video-transcript p {
-  text-align: justify;
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
-</style>
 <style scoped>
 .transcript {
   position: relative;
-  font-size: 0.7em;
-  color: #666;
-  text-indent: 2em;
   padding: 0.5em 1em;
+  color: #666;
   background-color: beige;
 }
+.transcript > p {
+  font-size: 0.74em;
+  text-indent: 2em;
+  text-align: justify;
+}
+.transcript > .title {
+  margin-bottom: 0.6em;
+  font-weight: bold;
+}
+.transcript > .text {
+  margin-bottom: 0.5em;
+}
+.transcript > .trans {
+  line-height: 1.3;
+  color: #888;
+  font-size: 0.64em;
+}
+
 .transcript > .footer {
   text-align: right;
-  font-size: 0.5em;
+  font-size: 0.6em;
   color: #999;
   text-decoration: underline;
   font-style: italic;

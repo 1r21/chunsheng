@@ -1,3 +1,7 @@
+import entities from "./entities";
+
+export const entityMap = entities;
+
 export function formatPlayTime(seconds: number) {
   if (!seconds) {
     return "00:00";

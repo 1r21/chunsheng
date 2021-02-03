@@ -52,12 +52,4 @@ export default {
   font-size: 0.8rem;
   padding: 0.4rem 1.5rem;
 }
-@keyframes rotate {
-  0% {
-    transform: rotateZ(0deg);
-  }
-  100% {
-    transform: rotateZ(360deg);
-  }
-}
 </style>
