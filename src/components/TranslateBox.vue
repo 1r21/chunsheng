@@ -106,12 +106,12 @@ export default {
 .translate > .i-fanyi {
   color: #666;
   padding: 0.05rem 0.1rem;
-  font-size: 1.2em;
+  font-size: 1em;
 }
 .content {
   color: #999;
   max-height: 15rem;
-  font-size: 0.8em;
+  font-size: 0.6em;
   padding: 0.1rem 0.2rem;
   line-height: 1.4;
   overflow: auto;

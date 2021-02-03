@@ -122,10 +122,10 @@ export default {
 <style scoped>
 .transcript {
   position: relative;
-  font-size: 0.9em;
+  font-size: 0.7em;
   color: #666;
   text-indent: 2em;
-  padding: 0.5rem 1rem;
+  padding: 0.5em 1em;
   background-color: beige;
 }
 .transcript > .footer {

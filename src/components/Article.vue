@@ -26,7 +26,9 @@ export default {
           if (entry.isIntersecting) {
             const lazyImage: Partial<HTMLImageElement> = entry.target;
             setTimeout(() => {
-              lazyImage.src = this.news.cover;
+              if (/\place\/\d+\.jpg/.test(<string>lazyImage.src)) {
+                lazyImage.src = this.news.cover;
+              }
             }, 300);
           }
         });
@@ -57,6 +59,6 @@ export default {
 }
 .content > p:last-child {
   margin-top: 0.3rem;
-  font-size: 0.8em;
+  font-size: 0.68em;
 }
 </style>
