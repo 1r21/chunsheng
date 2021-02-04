@@ -1,0 +1,26 @@
+name: Deploy TO OSS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: oss-pages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+
+      - name: Deploy
+        uses: saltbo/uptoc@master
+        with:
+          driver: ${{ secrets.DRIVER }}
+          region: ${{ secrets.REGION }}
+          bucket: ${{ secrets.BUCKET }}
+          exclude: .git,.cache,404.html,CNAME
+          dist: .
+        env:
+          UPTOC_UPLOADER_AK: ${{ secrets.UPTOC_UPLOADER_KEYID }}
+          UPTOC_UPLOADER_SK: ${{ secrets.UPTOC_UPLOADER_KEYSECRET }}
