@@ -22,7 +22,7 @@
         </template>
       </template>
       <p v-show="article.transcript" class="footer">
-        from: <a :href="article.src">pbs</a>
+        from: <a :href="article.source">pbs</a>
       </p>
     </div>
     <audio :src="article.src" @ended="ended" ref="audio"></audio>
