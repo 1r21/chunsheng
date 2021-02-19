@@ -1,14 +1,21 @@
+import { defineConfig } from "vite";
 import path from "path";
 import vue from "@vitejs/plugin-vue";
 
-export default {
+export default defineConfig({
   plugins: [vue()],
-  alias: {
-    "/@": path.resolve(__dirname, "src"),
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
   },
-  // support optional chain [build mode]
-  esbuildTarget: "es2015",
-  proxy: {
-    "/api": "http://0.0.0.0:8080/api",
+  build: {
+    // support optional chain [build mode]
+    target: "es2015",
   },
-};
+  server: {
+    proxy: {
+      "/api": "http://0.0.0.0:8080/api",
+    },
+  },
+});

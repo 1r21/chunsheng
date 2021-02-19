@@ -30,7 +30,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import { formatPlayTime } from "/@/utils";
+import { formatPlayTime } from "@/utils";
 
 export default defineComponent({
   name: "AudioPlayer",

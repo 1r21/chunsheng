@@ -15,10 +15,10 @@
   </Loading>
 </template>
 <script lang="ts">
-import { changeTitle } from "/@/utils";
-import { getNews, News } from "/@/services";
-import Loading from "/@/components/Loading.vue";
-import Article from "/@/components/Article.vue";
+import { changeTitle } from "@/utils";
+import { getNews, News } from "@/services";
+import Loading from "@/components/Loading.vue";
+import Article from "@/components/Article.vue";
 
 export default {
   name: "Home",

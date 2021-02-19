@@ -45,10 +45,10 @@
 </template>
 
 <script lang="ts">
-import { changeTitle, entityMap } from "/@/utils";
-import { News, getNewsById, translate } from "/@/services";
-import Loading from "/@/components/Loading.vue";
-import TranslateBox from "/@/components/TranslateBox.vue";
+import { changeTitle, entityMap } from "@/utils";
+import { News, getNewsById, translate } from "@/services";
+import Loading from "@/components/Loading.vue";
+import TranslateBox from "@/components/TranslateBox.vue";
 
 export default {
   name: "Detail",

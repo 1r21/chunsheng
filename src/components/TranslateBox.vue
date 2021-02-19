@@ -19,8 +19,8 @@
   </div>
 </template>
 <script lang="ts">
-import { Translation, translate } from "/@/services";
-import Loading from "/@/components/Loading.vue";
+import { Translation, translate } from "@/services";
+import Loading from "@/components/Loading.vue";
 
 type Pos = {
   x: number;

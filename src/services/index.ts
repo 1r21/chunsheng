@@ -1,4 +1,4 @@
-import request from "/@/utils/request";
+import request from "@/utils/request";
 
 export type News = {
   id?: number;
