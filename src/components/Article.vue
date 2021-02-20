@@ -8,33 +8,47 @@
   </article>
 </template>
 <script lang="ts">
+import { ref, onMounted, PropType } from "vue";
+import { News } from "@/services";
 const places = [10, 102, 1004, 1016];
 const rIndex = Math.floor(Math.random() * places.length);
+
 export default {
   name: "Article",
-  props: ["news"],
-  data() {
-    return {
-      place: `./place/${places[rIndex]}.jpg`,
-    };
+  props: {
+    news: {
+      type: Object as PropType<News>,
+      required: true,
+    },
   },
-  mounted() {
-    if ("IntersectionObserver" in window) {
-      const imageObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          // can visible
-          if (entry.isIntersecting) {
-            const lazyImage: Partial<HTMLImageElement> = entry.target;
-            setTimeout(() => {
-              if (/\place\/\d+\.jpg/.test(<string>lazyImage.src)) {
-                lazyImage.src = this.news.cover;
-              }
-            }, 300);
-          }
+  setup(props) {
+    const place = ref(`./place/${places[rIndex]}.jpg`);
+    const image = ref<HTMLImageElement | null>(null);
+
+    onMounted(() => {
+      if ("IntersectionObserver" in window) {
+        const imageObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            // can visible
+            if (entry.isIntersecting) {
+              const lazyImage: Partial<HTMLImageElement> = entry.target;
+              setTimeout(() => {
+                if (/\place\/\d+\.jpg/.test(<string>lazyImage.src)) {
+                  lazyImage.src = props.news.cover;
+                }
+              }, 300);
+            }
+          });
         });
-      });
-      imageObserver.observe(<HTMLImageElement>this.$refs.image);
-    }
+        if (image.value) {
+          imageObserver.observe(image.value);
+        }
+      }
+    });
+    return {
+      place,
+      image,
+    };
   },
 };
 </script>

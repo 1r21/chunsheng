@@ -4,7 +4,7 @@
       <router-link
         custom
         v-slot="{ navigate }"
-        v-for="item in list"
+        v-for="item in news"
         :key="item.id"
         :to="`/detail/${item.id}`"
       >
@@ -15,29 +15,32 @@
   </Loading>
 </template>
 <script lang="ts">
+import { ref, onMounted } from "vue";
 import { changeTitle } from "@/utils";
 import { getNews, News } from "@/services";
+
 import Loading from "@/components/Loading.vue";
 import Article from "@/components/Article.vue";
 
 export default {
-  name: "Home",
-  components: {
-    Loading,
-    Article,
-  },
-  data() {
+  setup() {
+    const loading = ref(false);
+    const news = ref<News[]>([]);
+
+    onMounted(async () => {
+      loading.value = true;
+      const { list } = await getNews();
+      news.value = list;
+      loading.value = false;
+      changeTitle("I Believe");
+    });
+
     return {
-      loading: false,
-      list: <News[]>[],
+      Loading,
+      Article,
+      loading,
+      news,
     };
-  },
-  async mounted() {
-    this.loading = true;
-    const { list } = await getNews();
-    this.list = list;
-    this.loading = false;
-    changeTitle("I Believe");
   },
 };
 </script>

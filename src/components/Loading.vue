@@ -10,12 +10,12 @@ export default {
   name: "Loading",
   props: {
     icon: {
-      default: "loading",
       type: String,
+      default: "loading",
     },
     size: {
-      default: "default",
       type: String,
+      default: "default",
     },
     loading: Boolean,
     error: String,

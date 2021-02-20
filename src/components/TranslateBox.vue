@@ -19,6 +19,7 @@
   </div>
 </template>
 <script lang="ts">
+import { ref, computed, PropType } from "vue";
 import { Translation, translate } from "@/services";
 import Loading from "@/components/Loading.vue";
 
@@ -29,37 +30,44 @@ type Pos = {
 
 export default {
   name: "TranslateBox",
-  components: {
-    Loading,
-  },
   props: {
     position: {
+      type: Object as PropType<Pos>,
       required: true,
-      type: Object,
     },
     text: {
-      required: true,
       type: String,
+      required: true,
     },
     visible: {
-      required: true,
       type: Boolean,
+      required: true,
     },
     btnVisible: {
-      required: true,
       type: Boolean,
+      required: true,
     },
   },
-  data() {
-    return {
-      translation: <Translation | null>{},
-      loading: false,
-    };
-  },
-  computed: {
-    pos() {
+  setup(props, { emit }) {
+    const translation = ref<Translation | null>(null);
+    const loading = ref(false);
+
+    async function showTranslation() {
+      emit("hide-btn");
+      emit("show-box");
+      loading.value = true;
+      translation.value = null;
+      const { list } = await translate(props.text);
+      if (list && list.length > 0) {
+        const [first] = list;
+        translation.value = first;
+      }
+      loading.value = false;
+    }
+
+    const pos = computed(() => {
       const { clientWidth, clientHeight } = document.documentElement;
-      const { x: left = 0, y: top = 0 } = <Pos>this.position;
+      const { x: left = 0, y: top = 0 } = props.position;
 
       const deltaX = clientWidth - left;
       const deltaY = clientHeight - top;
@@ -78,22 +86,15 @@ export default {
         return { bottom: `${bottomY}px`, left: `${left}px` };
       }
       return { top: `${topY}px`, left: `${left}px` };
-    },
-  },
-  methods: {
-    async showTranslation() {
-      this.$emit("hide");
-      this.$emit("show");
-      this.loading = true;
-      this.translation = null;
-      const { list } = await translate(this.text);
-      if (list && list.length > 0) {
-        const [first] = list;
-        console.log(first);
-        this.translation = first;
-      }
-      this.loading = false;
-    },
+    });
+
+    return {
+      Loading,
+      translation,
+      loading,
+      showTranslation,
+      pos,
+    };
   },
 };
 </script>

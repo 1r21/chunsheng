@@ -21,12 +21,12 @@
           <p class="text trans" v-show="item.trans">{{ item.trans }}</p>
         </template>
       </template>
-      <p v-show="article.transcript" class="footer">
-        from: <a :href="article.source">pbs</a>
+      <p v-show="article?.transcript" class="footer">
+        from: <a :href="article?.source">pbs</a>
       </p>
     </div>
-    <audio :src="article.src" @ended="ended" ref="audio"></audio>
-    <div class="action" :style="{ backgroundImage: `url(${article.cover})` }">
+    <audio :src="article?.src" @ended="ended" ref="audioEl"></audio>
+    <div class="action" :style="{ backgroundImage: `url(${article?.cover})` }">
       <i class="iconfont i-play" v-if="paused" @click="play" />
       <i class="iconfont i-pause" v-else @click="pause" />
       <router-link to="/" custom v-slot="{ navigate }">
@@ -38,17 +38,22 @@
       :position="translatePos"
       :visible="translateVisible"
       :btnVisible="translateBtnVisible"
-      @show="translateVisible = true"
-      @hide="translateBtnVisible = false"
+      @show-box="translateVisible = true"
+      @hide-btn="translateBtnVisible = false"
     />
   </Loading>
 </template>
 
 <script lang="ts">
-import { changeTitle, entityMap } from "@/utils";
-import { News, getNewsById, translate } from "@/services";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import { changeTitle } from "@/utils";
+
 import Loading from "@/components/Loading.vue";
 import TranslateBox from "@/components/TranslateBox.vue";
+
+import useTranslate from "@/composables/useTranslate";
+import useNews from "@/composables/useNews";
 
 export default {
   name: "Detail",
@@ -56,123 +61,76 @@ export default {
     Loading,
     TranslateBox,
   },
-  data() {
-    return {
-      loading: false,
-      exceptionText: "",
-      audioEl: <HTMLAudioElement>{},
-      paused: true,
-      article: <News>{},
-      texts: <{ type: string; value: string; trans?: string }[]>[],
-      translatePos: {},
-      translateText: "",
-      translateVisible: false,
-      translateBtnVisible: false,
-    };
-  },
-  async mounted() {
-    const { id } = this.$route.params;
-    this.loading = true;
-    try {
-      const article = await getNewsById(String(id));
-      if (article) {
-        const { date, title } = article;
-        this.article = article;
-        this.parseText(article);
-        changeTitle(`(${date}) ${title}`);
-      }
-    } catch (error) {
-      const errMsg = typeof error === "string" ? error : "error";
-      this.exceptionText = errMsg;
-      changeTitle(errMsg);
-    }
-    this.loading = false;
-    this.$nextTick(() => {
-      // dom updated
-      this.audioEl = <HTMLAudioElement>this.$refs.audio;
-    });
-  },
-  methods: {
-    play() {
-      if (this.audioEl) {
-        this.audioEl.play();
-        this.paused = false;
-      }
-    },
-    pause() {
-      if (this.audioEl) {
-        this.audioEl.pause();
-        this.paused = true;
-      }
-    },
-    ended() {
-      this.paused = true;
-    },
-    getContextmenu(e: MouseEvent) {
-      const { x, y } = e;
-      this.translatePos = { x, y };
-      const selection = window.getSelection();
-      if (selection) {
-        const range = selection.getRangeAt(0);
-        const txt = String(range);
-        if (txt) {
-          this.translateText = txt;
-          this.translateBtnVisible = true;
-        }
-      }
-    },
-    hideTranslate() {
-      this.translateVisible = false;
-      this.translateBtnVisible = false;
-    },
-    parseText(article: News) {
-      let content = article.transcript.replace(/(\r\n|\n|\r)/gm, "");
-      for (let key in entityMap) {
-        const re = new RegExp("&" + key + ";", "g");
-        content = content.replace(re, entityMap[key]);
-      }
-      const hReg = /<p[^>]*>(.*?)<\/p>/gm;
-      const texts = content.match(hReg);
+  setup() {
+    const paused = ref(false);
+    const translateVisible = ref(false);
+    const translateBtnVisible = ref(false);
+    const translateText = ref("");
+    const translatePos = ref({ x: 0, y: 0 });
+    const audioEl = ref<HTMLAudioElement | null>(null);
+    const { getMousePos, doTranslate } = useTranslate();
+    const route = useRoute();
+    const { id } = route.params;
+    const { news, texts, loading, exceptionText, docTitle } = useNews(
+      Number(id)
+    );
 
-      if (texts) {
-        this.texts = texts.map((item) => {
-          if (item.includes("</strong>")) {
-            const tRe = /<p><strong[^>]*>(.*?)<\/strong><\/p>/g;
-            return {
-              type: "title",
-              value: item.replace(tRe, "$1"),
-            };
-          }
-          return {
-            type: "text",
-            value: item.replace(/<p[^>]*>(.*?)<\/p>/g, "$1"),
-          };
-        });
+    onMounted(() => {
+      changeTitle(docTitle.value);
+    });
+
+    function getContextmenu(e: MouseEvent) {
+      const pos = getMousePos(e);
+      if (pos) {
+        const { x, y, sectionText } = pos;
+        translateText.value = sectionText;
+        translatePos.value = { x, y };
+        translateBtnVisible.value = true;
       }
-    },
-    async doTranslate(text: string, trans: string) {
-      if (trans) {
-        this.texts = this.texts.map((item) => {
-          if (item.value === text) {
-            item.trans = "";
-            return item;
-          }
-          return item;
-        });
-      } else {
-        const { list } = await translate(text);
-        if (list && list.length > 0) {
-          const [first] = list;
-          this.texts = this.texts.map((item) => {
-            if (item.value === text) {
-              item.trans = first.dst;
-              return item;
-            }
-            return item;
-          });
-        }
+    }
+
+    function play() {
+      if (audioEl.value) {
+        audioEl.value.play();
+        paused.value = false;
       }
-    },
+    }
+    function pause() {
+      if (audioEl.value) {
+        audioEl.value.pause();
+        paused.value = true;
+      }
+    }
+
+    function ended() {
+      paused.value = true;
+    }
+
+    function hideTranslate() {
+      translateVisible.value = false;
+      translateBtnVisible.value = false;
+    }
+
+    return {
+      loading,
+      exceptionText,
+      audioEl,
+      getContextmenu,
+      texts,
+      article: news,
+      translateText,
+      translatePos,
+      translateVisible,
+      translateBtnVisible,
+      doTranslate: (text: string, trans: string | null) => {
+        doTranslate(texts.value, text, trans);
+      },
+      hideTranslate,
+      paused,
+      play,
+      pause,
+      ended,
+    };
   },
 };
 </script>
