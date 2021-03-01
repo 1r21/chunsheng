@@ -57,7 +57,7 @@ export default defineComponent({
   methods: {
     formatPlayTime,
     playAudio(audio: any) {
-      const { src, title, cover } = audio;
+      // const { src, title, cover } = audio;
       // this.manager.title = title;
       // this.manager.coverImgUrl = cover;
       // this.manager.src = src;

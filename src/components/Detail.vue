@@ -33,6 +33,10 @@
       <audio :src="article?.src" @ended="ended" ref="audioEl"></audio>
       <div
         class="action"
+        ref="actionBtn"
+        @touchstart="touchStart"
+        @touchend="touchEnd"
+        @touchmove="touchMove"
         :style="{ backgroundImage: `url(${article?.cover})` }"
       >
         <i class="iconfont i-play" v-if="paused" @click="play" />
@@ -77,6 +81,14 @@ export default {
     const translateText = ref("");
     const translatePos = ref({ x: 0, y: 0 });
     const audioEl = ref<HTMLAudioElement | null>(null);
+    const actionBtn = ref<HTMLDivElement | null>(null);
+    // finger pos
+    const startX = ref(0);
+    const startY = ref(0);
+    // target pos
+    const boxX = ref(0);
+    const boxY = ref(0);
+
     const { getMousePos, doTranslate } = useTranslate();
     const route = useRoute();
     const { id } = route.params;
@@ -138,6 +150,41 @@ export default {
       play,
       pause,
       ended,
+      actionBtn,
+      touchStart(e: TouchEvent) {
+        const { pageX, pageY } = e.targetTouches[0];
+        startX.value = pageX;
+        startY.value = pageY;
+        if (actionBtn.value) {
+          const {
+            style,
+            offsetLeft,
+            offsetTop,
+            offsetWidth,
+            offsetHeight,
+          } = actionBtn.value;
+          boxX.value = offsetLeft + offsetWidth;
+          boxY.value = offsetTop + offsetHeight;
+          style.boxShadow = "0 0 10px rgba(0, 0, 0, .5)";
+        }
+      },
+      touchEnd() {
+        if (actionBtn.value) {
+          actionBtn.value.style.boxShadow = "none";
+        }
+      },
+      touchMove(e: TouchEvent) {
+        e.preventDefault();
+        const { clientHeight, clientWidth } = document.documentElement;
+        const { pageX, pageY } = e.targetTouches[0];
+        const moveX = pageX - startX.value;
+        const moveY = pageY - startY.value;
+        if (actionBtn.value) {
+          const { style } = actionBtn.value;
+          style.right = `${clientWidth - (boxX.value + moveX)}px`;
+          style.bottom = `${clientHeight - (boxY.value + moveY)}px`;
+        }
+      },
     };
   },
 };
@@ -182,8 +229,8 @@ export default {
 .action {
   position: fixed;
   display: flex;
-  bottom: 2rem;
   right: 2rem;
+  bottom: 2rem;
   background-color: #ccc;
   border-radius: 2px;
   background-size: cover;
