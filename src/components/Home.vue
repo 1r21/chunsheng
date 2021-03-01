@@ -23,6 +23,10 @@ import Loading from "@/components/Loading.vue";
 import Article from "@/components/Article.vue";
 
 export default {
+  components: {
+    Loading,
+    Article,
+  },
   setup() {
     const loading = ref(false);
     const news = ref<News[]>([]);
@@ -36,8 +40,6 @@ export default {
     });
 
     return {
-      Loading,
-      Article,
       loading,
       news,
     };

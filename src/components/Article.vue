@@ -18,6 +18,7 @@ export default {
   props: {
     news: {
       type: Object as PropType<News>,
+      default: {},
       required: true,
     },
   },

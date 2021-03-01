@@ -14,7 +14,7 @@
             <span>
               <i
                 class="iconfont i-translater"
-                @click="doTranslate(item.value, item.trans)"
+                @click="doTranslate(item.value,item.trans)"
               />
             </span>
           </p>

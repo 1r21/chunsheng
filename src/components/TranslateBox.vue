@@ -30,6 +30,9 @@ type Pos = {
 
 export default {
   name: "TranslateBox",
+  components: {
+    Loading,
+  },
   props: {
     position: {
       type: Object as PropType<Pos>,
@@ -89,7 +92,6 @@ export default {
     });
 
     return {
-      Loading,
       translation,
       loading,
       showTranslation,
