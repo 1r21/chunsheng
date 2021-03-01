@@ -1,47 +1,56 @@
 <template>
-  <Loading :loading="loading" :error="exceptionText" size="large">
-    <div
-      class="transcript"
-      @contextmenu.prevent="getContextmenu"
-      @click="hideTranslate"
-      @touchstart="hideTranslate"
-    >
-      <template v-for="item in texts" :key="item.type + item.value">
-        <p class="title" v-if="item.type === 'title'">{{ item.value }}</p>
-        <template v-else>
-          <p class="text">
-            <span>{{ item.value }}</span>
-            <span>
-              <i
-                class="iconfont i-translater"
-                @click="doTranslate(item.value,item.trans)"
-              />
-            </span>
-          </p>
-          <p class="text trans" v-show="item.trans">{{ item.trans }}</p>
+  <div class="transcript-wrap">
+    <Loading :loading="loading" :error="exceptionText" size="large">
+      <div
+        class="transcript"
+        v-if="article?.transcript"
+        @contextmenu.prevent="getContextmenu"
+        @click="hideTranslate"
+        @touchstart="hideTranslate"
+      >
+        <template v-for="item in texts" :key="item.type + item.value">
+          <p class="title" v-if="item.type === 'title'">{{ item.value }}</p>
+          <template v-else>
+            <p class="text">
+              <span>{{ item.value }}</span>
+              <span>
+                <i
+                  class="iconfont i-translater"
+                  @click="doTranslate(item.value, item.trans)"
+                />
+              </span>
+            </p>
+            <p class="text trans" v-show="item.trans">{{ item.trans }}</p>
+          </template>
         </template>
-      </template>
-      <p v-show="article?.transcript" class="footer">
+      </div>
+      <div class="transcript" v-else>
+        <p class="text">The transcript is on the way!</p>
+      </div>
+      <p v-show="article?.source" class="footer">
         from: <a :href="article?.source">pbs</a>
       </p>
-    </div>
-    <audio :src="article?.src" @ended="ended" ref="audioEl"></audio>
-    <div class="action" :style="{ backgroundImage: `url(${article?.cover})` }">
-      <i class="iconfont i-play" v-if="paused" @click="play" />
-      <i class="iconfont i-pause" v-else @click="pause" />
-      <router-link to="/" custom v-slot="{ navigate }">
-        <i class="iconfont i-home" @click="navigate" />
-      </router-link>
-    </div>
-    <TranslateBox
-      :text="translateText"
-      :position="translatePos"
-      :visible="translateVisible"
-      :btnVisible="translateBtnVisible"
-      @show-box="translateVisible = true"
-      @hide-btn="translateBtnVisible = false"
-    />
-  </Loading>
+      <audio :src="article?.src" @ended="ended" ref="audioEl"></audio>
+      <div
+        class="action"
+        :style="{ backgroundImage: `url(${article?.cover})` }"
+      >
+        <i class="iconfont i-play" v-if="paused" @click="play" />
+        <i class="iconfont i-pause" v-else @click="pause" />
+        <router-link to="/" custom v-slot="{ navigate }">
+          <i class="iconfont i-home" @click="navigate" />
+        </router-link>
+      </div>
+      <TranslateBox
+        :text="translateText"
+        :position="translatePos"
+        :visible="translateVisible"
+        :btnVisible="translateBtnVisible"
+        @show-box="translateVisible = true"
+        @hide-btn="translateBtnVisible = false"
+      />
+    </Loading>
+  </div>
 </template>
 
 <script lang="ts">
@@ -62,7 +71,7 @@ export default {
     TranslateBox,
   },
   setup() {
-    const paused = ref(false);
+    const paused = ref(true);
     const translateVisible = ref(false);
     const translateBtnVisible = ref(false);
     const translateText = ref("");
@@ -74,7 +83,6 @@ export default {
     const { news, texts, loading, exceptionText, docTitle } = useNews(
       Number(id)
     );
-
     onMounted(() => {
       changeTitle(docTitle.value);
     });
@@ -135,11 +143,14 @@ export default {
 };
 </script>
 <style scoped>
+.transcript-wrap {
+  height: 100%;
+  overflow: auto;
+  background-color: beige;
+}
 .transcript {
-  position: relative;
   padding: 0.5em 1em;
   color: #666;
-  background-color: beige;
 }
 .transcript > p {
   font-size: 0.74em;
@@ -159,7 +170,8 @@ export default {
   font-size: 0.64em;
 }
 
-.transcript > .footer {
+.transcript-wrap .footer {
+  padding: 0.5em 1em;
   text-align: right;
   font-size: 0.6em;
   color: #999;

@@ -16,9 +16,11 @@ export default function useNews(id: number) {
       if (article) {
         const { date, title } = article;
         news.value = article;
-        const formateTexts = parseText(article);
-        if (formateTexts) {
-          texts.value = formateTexts;
+        if (article.transcript) {
+          const formateTexts = parseText(article.transcript);
+          if (formateTexts) {
+            texts.value = formateTexts;
+          }
         }
         docTitle.value = `(${date}) ${title}`;
       }

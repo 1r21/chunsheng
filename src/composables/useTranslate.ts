@@ -1,4 +1,4 @@
-import { News, translate } from "@/services";
+import { translate } from "@/services";
 import { entityMap } from "@/utils";
 
 export default function useTranslate() {
@@ -16,8 +16,8 @@ export default function useTranslate() {
     }
   }
 
-  function parseText(article: News) {
-    let content = article.transcript.replace(/(\r\n|\n|\r)/gm, "");
+  function parseText(article: string) {
+    let content = article.replace(/(\r\n|\n|\r)/gm, "");
     for (let key in entityMap) {
       const re = new RegExp("&" + key + ";", "g");
       content = content.replace(re, entityMap[key]);
