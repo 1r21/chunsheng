@@ -16,6 +16,17 @@
       href="//at.alicdn.com/t/font_2188556_cty08w6nggb.css"
     />
     <title>I Believe</title>
+    <script>
+      (function () {
+        var { userAgent: ua } = navigator;
+        var isMobile = ["Android", "iPhone", "iPad", "iPod"].some(
+          (m) => ua.indexOf(m) > -1
+        );
+        if (!isMobile) {
+          location.href = "http://haerbin.chenggang.win";
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>
@@ -28,14 +39,14 @@
     <script type="module" src="/src/main.ts"></script>
     <script>
       // http://www.backalleycoder.com/2016/05/13/sghpa-the-single-page-app-hack-for-github-pages/
-      (function(){
+      (function () {
         const redirect = sessionStorage.redirect;
         delete sessionStorage.redirect;
         if (redirect && redirect != location.href) {
           history.replaceState(null, null, redirect);
         }
       })();
-      
+
       (function () {
         document.addEventListener(
           "DOMContentLoaded",
