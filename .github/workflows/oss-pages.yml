@@ -12,7 +12,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: gh-pages
-
+      - name: Generate 404
+        run: mv 404.html errno-404
       - name: Deploy
         uses: saltbo/uptoc@master
         with:
