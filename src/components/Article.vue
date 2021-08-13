@@ -7,52 +7,41 @@
     </div>
   </article>
 </template>
-<script lang="ts">
-import { ref, onMounted, PropType } from "vue";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
 import { News } from "@/services";
 const places = [10, 102, 1004, 1016];
 const rIndex = Math.floor(Math.random() * places.length);
 
-export default {
-  name: "Article",
-  props: {
-    news: {
-      type: Object as PropType<News>,
-      default: {},
-      required: true,
-    },
-  },
-  setup(props) {
-    const place = ref(`./place/${places[rIndex]}.jpg`);
-    const image = ref<HTMLImageElement | null>(null);
+const props = defineProps<{
+  news: News
+}>()
 
-    onMounted(() => {
-      if ("IntersectionObserver" in window) {
-        const imageObserver = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            // can visible
-            if (entry.isIntersecting) {
-              const lazyImage: Partial<HTMLImageElement> = entry.target;
-              setTimeout(() => {
-                if (/\place\/\d+\.jpg/.test(<string>lazyImage.src)) {
-                  lazyImage.src = props.news.cover;
-                }
-              }, 300);
+const place = ref(`./place/${places[rIndex]}.jpg`);
+const image = ref<HTMLImageElement | null>(null);
+
+onMounted(() => {
+  if ("IntersectionObserver" in window) {
+    const imageObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        // can visible
+        if (entry.isIntersecting) {
+          const lazyImage: Partial<HTMLImageElement> = entry.target;
+          setTimeout(() => {
+            if (/\place\/\d+\.jpg/.test(<string>lazyImage.src)) {
+              lazyImage.src = props.news.cover;
             }
-          });
-        });
-        if (image.value) {
-          imageObserver.observe(image.value);
+          }, 300);
         }
-      }
+      });
     });
-    return {
-      place,
-      image,
-    };
-  },
-};
+    if (image.value) {
+      imageObserver.observe(image.value);
+    }
+  }
+});
 </script>
+
 <style scoped>
 .post-card {
   padding-bottom: 0.8rem;

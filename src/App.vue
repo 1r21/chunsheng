@@ -4,11 +4,6 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "App",
-};
-</script>
 <style scoped>
 .container {
   height: 100%;

@@ -14,7 +14,7 @@
     <div class="footer">～over～</div>
   </Loading>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { changeTitle } from "@/utils";
 import { getNews, News } from "@/services";
@@ -22,29 +22,16 @@ import { getNews, News } from "@/services";
 import Loading from "@/components/Loading.vue";
 import Article from "@/components/Article.vue";
 
-export default {
-  components: {
-    Loading,
-    Article,
-  },
-  setup() {
-    const loading = ref(false);
-    const news = ref<News[]>([]);
+const loading = ref(false);
+const news = ref<News[]>([]);
 
-    onMounted(async () => {
-      loading.value = true;
-      const { list } = await getNews();
-      news.value = list;
-      loading.value = false;
-      changeTitle("I Believe");
-    });
-
-    return {
-      loading,
-      news,
-    };
-  },
-};
+onMounted(async () => {
+  loading.value = true;
+  const { list } = await getNews();
+  news.value = list;
+  loading.value = false;
+  changeTitle("I Believe");
+});
 </script>
 <style scoped>
 .article-list {

@@ -14,10 +14,7 @@
             <p class="text">
               <span>{{ item.value }}</span>
               <span>
-                <i
-                  class="iconfont i-translater"
-                  @click="doTranslate(item.value, item.trans)"
-                />
+                <i class="iconfont i-translater" @click="doTranslate(item.value, item.trans)"></i>
               </span>
             </p>
             <p class="text trans" v-show="item.trans">{{ item.trans }}</p>
@@ -28,7 +25,8 @@
         <p class="text">The transcript is on the way!</p>
       </div>
       <p v-show="article?.source" class="footer">
-        from: <a :href="article?.source">pbs</a>
+        from:
+        <a :href="article?.source">pbs</a>
       </p>
       <audio :src="article?.src" @ended="ended" ref="audioEl"></audio>
       <div
@@ -39,10 +37,10 @@
         @touchmove="touchMove"
         :style="{ backgroundImage: `url(${article?.cover})` }"
       >
-        <i class="iconfont i-play" v-if="paused" @click="play" />
-        <i class="iconfont i-pause" v-else @click="pause" />
+        <i class="iconfont i-play" v-if="paused" @click="play"></i>
+        <i class="iconfont i-pause" v-else @click="pause"></i>
         <router-link to="/" custom v-slot="{ navigate }">
-          <i class="iconfont i-home" @click="navigate" />
+          <i class="iconfont i-home" @click="navigate"></i>
         </router-link>
       </div>
       <TranslateBox
@@ -57,7 +55,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { changeTitle } from "@/utils";
@@ -68,126 +66,100 @@ import TranslateBox from "@/components/TranslateBox.vue";
 import useTranslate from "@/composables/useTranslate";
 import useNews from "@/composables/useNews";
 
-export default {
-  name: "Detail",
-  components: {
-    Loading,
-    TranslateBox,
-  },
-  setup() {
-    const paused = ref(true);
-    const translateVisible = ref(false);
-    const translateBtnVisible = ref(false);
-    const translateText = ref("");
-    const translatePos = ref({ x: 0, y: 0 });
-    const audioEl = ref<HTMLAudioElement | null>(null);
-    const actionBtn = ref<HTMLDivElement | null>(null);
-    // finger pos
-    const startX = ref(0);
-    const startY = ref(0);
-    // target pos
-    const boxX = ref(0);
-    const boxY = ref(0);
+const paused = ref(true);
+const translateVisible = ref(false);
+const translateBtnVisible = ref(false);
+const translateText = ref("");
+const translatePos = ref({ x: 0, y: 0 });
+const audioEl = ref<HTMLAudioElement | null>(null);
+const actionBtn = ref<HTMLDivElement | null>(null);
+// finger pos
+const startX = ref(0);
+const startY = ref(0);
+// target pos
+const boxX = ref(0);
+const boxY = ref(0);
 
-    const { getMousePos, doTranslate } = useTranslate();
-    const route = useRoute();
-    const { id } = route.params;
-    const { news, texts, loading, exceptionText, docTitle } = useNews(
-      Number(id)
-    );
-    onMounted(() => {
-      changeTitle(docTitle.value);
-    });
+const { getMousePos, doTranslate: t } = useTranslate();
+const route = useRoute();
+const { id } = route.params;
+const { news: article, texts, loading, exceptionText, docTitle } = useNews(
+  Number(id)
+);
 
-    function getContextmenu(e: MouseEvent) {
-      const pos = getMousePos(e);
-      if (pos) {
-        const { x, y, sectionText } = pos;
-        translateText.value = sectionText;
-        translatePos.value = { x, y };
-        translateBtnVisible.value = true;
-      }
-    }
+onMounted(() => {
+  changeTitle(docTitle.value);
+});
 
-    function play() {
-      if (audioEl.value) {
-        audioEl.value.play();
-        paused.value = false;
-      }
-    }
-    function pause() {
-      if (audioEl.value) {
-        audioEl.value.pause();
-        paused.value = true;
-      }
-    }
+function getContextmenu(e: MouseEvent) {
+  const pos = getMousePos(e);
+  if (pos) {
+    const { x, y, sectionText } = pos;
+    translateText.value = sectionText;
+    translatePos.value = { x, y };
+    translateBtnVisible.value = true;
+  }
+}
 
-    function ended() {
-      paused.value = true;
-    }
+function play() {
+  if (audioEl.value) {
+    audioEl.value.play();
+    paused.value = false;
+  }
+}
+function pause() {
+  if (audioEl.value) {
+    audioEl.value.pause();
+    paused.value = true;
+  }
+}
 
-    function hideTranslate() {
-      translateVisible.value = false;
-      translateBtnVisible.value = false;
-    }
+function ended() {
+  paused.value = true;
+}
+function doTranslate(text: string, trans: string | undefined) {
+  return t(texts.value, text, trans);
+}
 
-    return {
-      loading,
-      exceptionText,
-      audioEl,
-      getContextmenu,
-      texts,
-      article: news,
-      translateText,
-      translatePos,
-      translateVisible,
-      translateBtnVisible,
-      doTranslate: (text: string, trans: string | null) => {
-        doTranslate(texts.value, text, trans);
-      },
-      hideTranslate,
-      paused,
-      play,
-      pause,
-      ended,
-      actionBtn,
-      touchStart(e: TouchEvent) {
-        const { pageX, pageY } = e.targetTouches[0];
-        startX.value = pageX;
-        startY.value = pageY;
-        if (actionBtn.value) {
-          const {
-            style,
-            offsetLeft,
-            offsetTop,
-            offsetWidth,
-            offsetHeight,
-          } = actionBtn.value;
-          boxX.value = offsetLeft + offsetWidth;
-          boxY.value = offsetTop + offsetHeight;
-          style.boxShadow = "0 0 10px rgba(0, 0, 0, .5)";
-        }
-      },
-      touchEnd() {
-        if (actionBtn.value) {
-          actionBtn.value.style.boxShadow = "none";
-        }
-      },
-      touchMove(e: TouchEvent) {
-        e.preventDefault();
-        const { clientHeight, clientWidth } = document.documentElement;
-        const { pageX, pageY } = e.targetTouches[0];
-        const moveX = pageX - startX.value;
-        const moveY = pageY - startY.value;
-        if (actionBtn.value) {
-          const { style } = actionBtn.value;
-          style.right = `${clientWidth - (boxX.value + moveX)}px`;
-          style.bottom = `${clientHeight - (boxY.value + moveY)}px`;
-        }
-      },
-    };
-  },
-};
+function hideTranslate() {
+  translateVisible.value = false;
+  translateBtnVisible.value = false;
+}
+
+function touchStart(e: TouchEvent) {
+  const { pageX, pageY } = e.targetTouches[0];
+  startX.value = pageX;
+  startY.value = pageY;
+  if (actionBtn.value) {
+    const {
+      style,
+      offsetLeft,
+      offsetTop,
+      offsetWidth,
+      offsetHeight,
+    } = actionBtn.value;
+    boxX.value = offsetLeft + offsetWidth;
+    boxY.value = offsetTop + offsetHeight;
+    style.boxShadow = "0 0 10px rgba(0, 0, 0, .5)";
+  }
+}
+function touchEnd() {
+  if (actionBtn.value) {
+    actionBtn.value.style.boxShadow = "none";
+  }
+}
+function touchMove(e: TouchEvent) {
+  e.preventDefault();
+  const { clientHeight, clientWidth } = document.documentElement;
+  const { pageX, pageY } = e.targetTouches[0];
+  const moveX = pageX - startX.value;
+  const moveY = pageY - startY.value;
+  if (actionBtn.value) {
+    const { style } = actionBtn.value;
+    style.right = `${clientWidth - (boxX.value + moveX)}px`;
+    style.bottom = `${clientHeight - (boxY.value + moveY)}px`;
+  }
+}
 </script>
 <style scoped>
 .transcript-wrap {

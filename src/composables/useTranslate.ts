@@ -45,7 +45,7 @@ export default function useTranslate() {
   async function doTranslate(
     texts: { type: string; value: string; trans?: string }[],
     text: string,
-    trans: string | null
+    trans: string | undefined
   ) {
     if (trans) {
       return texts.map((item) => {

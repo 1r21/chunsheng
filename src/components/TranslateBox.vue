@@ -6,11 +6,11 @@
         <div v-if="!translation">No result</div>
         <template v-else>
           <p class="before">
-            <span>S: </span>
+            <span>S:</span>
             <span>{{ translation.src }}</span>
           </p>
           <p class="after">
-            <span class="dst">D: </span>
+            <span class="dst">D:</span>
             <span>{{ translation.dst }}</span>
           </p>
         </template>
@@ -18,8 +18,8 @@
     </Loading>
   </div>
 </template>
-<script lang="ts">
-import { ref, computed, PropType } from "vue";
+<script setup lang="ts">
+import { ref, computed } from "vue";
 import { Translation, translate } from "@/services";
 import Loading from "@/components/Loading.vue";
 
@@ -28,77 +28,59 @@ type Pos = {
   y: number;
 };
 
-export default {
-  name: "TranslateBox",
-  components: {
-    Loading,
-  },
-  props: {
-    position: {
-      type: Object as PropType<Pos>,
-      required: true,
-    },
-    text: {
-      type: String,
-      required: true,
-    },
-    visible: {
-      type: Boolean,
-      required: true,
-    },
-    btnVisible: {
-      type: Boolean,
-      required: true,
-    },
-  },
-  setup(props, { emit }) {
-    const translation = ref<Translation | null>(null);
-    const loading = ref(false);
+interface Props {
+  position: Pos;
+  text: string;
+  visible: boolean;
+  btnVisible: boolean;
+}
 
-    async function showTranslation() {
-      emit("hide-btn");
-      emit("show-box");
-      loading.value = true;
-      translation.value = null;
-      const { list } = await translate(props.text);
-      if (list && list.length > 0) {
-        const [first] = list;
-        translation.value = first;
-      }
-      loading.value = false;
-    }
+const emit = defineEmits<{
+  (e: 'hide-btn'): void;
+  (e: 'show-box'): void;
+}>()
 
-    const pos = computed(() => {
-      const { clientWidth, clientHeight } = document.documentElement;
-      const { x: left = 0, y: top = 0 } = props.position;
+const props = defineProps<Props>()
 
-      const deltaX = clientWidth - left;
-      const deltaY = clientHeight - top;
+const translation = ref<Translation | null>(null);
+const loading = ref(false);
 
-      const btnHeight = 40;
-      const topY = top > btnHeight ? top - btnHeight : top;
-      const bottomY = deltaY + btnHeight / 2;
+async function showTranslation() {
+  emit("hide-btn");
+  emit("show-box");
+  loading.value = true;
+  translation.value = null;
+  const { list } = await translate(props.text);
+  if (list && list.length > 0) {
+    const [first] = list;
+    translation.value = first;
+  }
+  loading.value = false;
+}
 
-      if (deltaX <= left && deltaY <= top) {
-        return { bottom: `${bottomY}px`, right: `${deltaX}px` };
-      }
-      if (deltaX <= left) {
-        return { top: `${topY}px`, right: `${deltaX}px` };
-      }
-      if (deltaY <= top) {
-        return { bottom: `${bottomY}px`, left: `${left}px` };
-      }
-      return { top: `${topY}px`, left: `${left}px` };
-    });
+const pos = computed(() => {
+  const { clientWidth, clientHeight } = document.documentElement;
+  const { x: left = 0, y: top = 0 } = props.position;
 
-    return {
-      translation,
-      loading,
-      showTranslation,
-      pos,
-    };
-  },
-};
+  const deltaX = clientWidth - left;
+  const deltaY = clientHeight - top;
+
+  const btnHeight = 40;
+  const topY = top > btnHeight ? top - btnHeight : top;
+  const bottomY = deltaY + btnHeight / 2;
+
+  if (deltaX <= left && deltaY <= top) {
+    return { bottom: `${bottomY}px`, right: `${deltaX}px` };
+  }
+  if (deltaX <= left) {
+    return { top: `${topY}px`, right: `${deltaX}px` };
+  }
+  if (deltaY <= top) {
+    return { bottom: `${bottomY}px`, left: `${left}px` };
+  }
+  return { top: `${topY}px`, left: `${left}px` };
+});
+
 </script>
 <style scoped>
 .translate {

@@ -5,23 +5,22 @@
   </div>
   <slot v-else></slot>
 </template> 
-<script>
-export default {
-  name: "Loading",
-  props: {
-    icon: {
-      type: String,
-      default: "loading",
-    },
-    size: {
-      type: String,
-      default: "default",
-    },
-    loading: Boolean,
-    error: String,
-  },
-};
+<script setup lang="ts">
+import { withDefaults } from 'vue'
+
+interface Props {
+  icon?: string;
+  size: 'default' | 'small' | 'large';
+  loading: boolean;
+  error?: string;
+}
+
+withDefaults(defineProps<Props>(), {
+  icon: "loading",
+  size: "default"
+})
 </script>
+
 <style scoped>
 .loading-wrap {
   display: flex;

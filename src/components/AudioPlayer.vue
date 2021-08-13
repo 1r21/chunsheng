@@ -5,25 +5,25 @@
       <span>{{ formatPlayTime(duration) }}</span>
     </div>
     <div class="progress" @click="seek">
-      <div class="point" />
-      <div class="static" />
-      <div class="dynamic" style="width:{{progress}}%" />
+      <div class="point"></div>
+      <div class="static"></div>
+      <div class="dynamic" style="width:{{progress}}%"></div>
     </div>
     <div class="controls">
       <button @click="prev">
-        <i class="iconfont i-prev" />
+        <i class="iconfont i-prev"></i>
       </button>
       <button class="pause-btn" @click="pause" v-if="isPlaying">
-        <i class="iconfont i-pause" />
+        <i class="iconfont i-pause"></i>
       </button>
       <button class="play-btn" @click="play" v-else>
-        <i class="iconfont i-play" />
+        <i class="iconfont i-play"></i>
       </button>
       <button @click="next">
-        <i class="iconfont i-next" />
+        <i class="iconfont i-next"></i>
       </button>
       <button @click="showList">
-        <i class="iconfont i-list" />
+        <i class="iconfont i-list"></i>
       </button>
     </div>
   </div>
@@ -82,10 +82,10 @@ export default defineComponent({
       //   const { duration, progressWidth } = this;
       //   const progress = (clientX - offsetLeft) / progressWidth;
       //   const currentTime = duration * progress;
-      //   // this.manager.seek(currentTime);
+      // this.manager.seek(currentTime);
     },
-    play() {},
-    pause() {},
+    play() { },
+    pause() { },
     prev() {
       let { currentIndex, list } = this;
       currentIndex--;
