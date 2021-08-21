@@ -27,7 +27,7 @@ jobs:
 
       - name: Build
         env:
-          VITE_API: ${{ secrets.VITE_API }}
+          VITE_API_URL: ${{ secrets.API_URL }}
           BASE_URL: ${{ secrets.BASE_URL }} 
         run: |
           yarn

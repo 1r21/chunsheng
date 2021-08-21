@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = <string>import.meta.env.VITE_API || "/api";
+axios.defaults.baseURL = import.meta.env.VITE_API_URL + '/api';
 // axios.defaults.headers.common['X-Token'] = AUTH_TOKEN;
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
