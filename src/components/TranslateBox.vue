@@ -20,7 +20,8 @@
 </template>
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { Translation, translate } from "@/services";
+import { Translation, translate } from "@1r21/youyihe";
+
 import Loading from "@/components/Loading.vue";
 
 type Pos = {

@@ -1,6 +1,6 @@
 <template>
   <article class="post-card">
-    <img :src="place" alt="news cover" class="cover" ref="image" />
+    <img :src="place" alt="Fetch cover err" class="cover" ref="image" />
     <div class="content">
       <p>{{ news.date }}</p>
       <p>{{ news.title }}</p>
@@ -9,7 +9,8 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { News } from "@/services";
+import { News } from "@1r21/youyihe";
+
 const places = [10, 102, 1004, 1016];
 const rIndex = Math.floor(Math.random() * places.length);
 

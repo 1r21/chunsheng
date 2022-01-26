@@ -16,8 +16,8 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { changeTitle } from "@/utils";
-import { getNews, News } from "@/services";
+// import { changeTitle } from "@/utils";
+import { getNews, News, changeTitle } from "@1r21/youyihe";
 
 import Loading from "@/components/Loading.vue";
 import Article from "@/components/Article.vue";

@@ -1,6 +1,6 @@
 import { ref, onMounted } from "vue";
-import { News, getNewsById } from "@/services";
-import useTranslate from "./useTranslate";
+import { News, getNewsById, parseText } from "@1r21/youyihe";
+
 
 export default function useNews(id: number) {
   const loading = ref(false);
@@ -8,7 +8,7 @@ export default function useNews(id: number) {
   const docTitle = ref("");
   const news = ref<News | null>(null);
   const texts = ref<{ type: string; value: string; trans?: string }[]>([]);
-  const { parseText } = useTranslate();
+
   onMounted(async () => {
     loading.value = true;
     try {

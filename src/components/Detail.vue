@@ -58,12 +58,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import { changeTitle } from "@/utils";
+import { changeTitle, getMousePos, doTranslate as t } from "@1r21/youyihe";
 
 import Loading from "@/components/Loading.vue";
 import TranslateBox from "@/components/TranslateBox.vue";
 
-import useTranslate from "@/composables/useTranslate";
 import useNews from "@/composables/useNews";
 
 const paused = ref(true);
@@ -80,7 +79,7 @@ const startY = ref(0);
 const boxX = ref(0);
 const boxY = ref(0);
 
-const { getMousePos, doTranslate: t } = useTranslate();
+// const { getMousePos, doTranslate: t } = useTranslate();
 const route = useRoute();
 const { id } = route.params;
 const { news: article, texts, loading, exceptionText, docTitle } = useNews(

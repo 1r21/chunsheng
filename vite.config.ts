@@ -1,21 +1,24 @@
 import path from "path";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
 
-export default defineConfig({
-  plugins: [vue()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "src"),
+export default defineConfig(({ mode }) => {
+  // ref: https://github.com/vitejs/vite/issues/1930
+  const { VITE_API_HOST } = loadEnv(mode, process.cwd());
+  
+  return {
+    define: {
+      __API_HOST__: JSON.stringify(VITE_API_HOST),
     },
-  },
-  build: {
-    // support optional chain [build mode]
-    target: "es2015",
-  },
-  server: {
-    proxy: {
-      "/api": "http://0.0.0.0:8080/api",
+    plugins: [vue()],
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "src"),
+      },
     },
-  },
+    build: {
+      // support optional chain [build mode]
+      target: "es2015",
+    }
+  }
 });

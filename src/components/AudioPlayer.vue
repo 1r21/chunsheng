@@ -7,7 +7,7 @@
     <div class="progress" @click="seek">
       <div class="point"></div>
       <div class="static"></div>
-      <div class="dynamic" style="width:{{progress}}%"></div>
+      <div class="dynamic" :style="{ width: progress + '%' }"></div>
     </div>
     <div class="controls">
       <button @click="prev">
@@ -30,7 +30,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import { formatPlayTime } from "@/utils";
+import { formatPlayTime } from "@1r21/youyihe";
 
 export default defineComponent({
   name: "AudioPlayer",
