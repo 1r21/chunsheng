@@ -20,7 +20,7 @@
 </template>
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { Translation, translate } from "@1r21/youyihe";
+import { type Translation, translate } from "@1r21/api-h5";
 
 import Loading from "@/components/Loading.vue";
 

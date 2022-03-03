@@ -9,7 +9,7 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { News } from "@1r21/youyihe";
+import type { News } from "@1r21/api-h5";
 
 const places = [10, 102, 1004, 1016];
 const rIndex = Math.floor(Math.random() * places.length);

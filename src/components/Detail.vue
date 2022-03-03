@@ -53,12 +53,13 @@
       />
     </Loading>
   </div>
-</template>
+</template>   
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import { changeTitle, getMousePos, doTranslate as t } from "@1r21/youyihe";
+import { translate as t } from '@1r21/api-h5'
+import { changeTitle, getMousePos } from "@1r21/util";
 
 import Loading from "@/components/Loading.vue";
 import TranslateBox from "@/components/TranslateBox.vue";
@@ -79,7 +80,6 @@ const startY = ref(0);
 const boxX = ref(0);
 const boxY = ref(0);
 
-// const { getMousePos, doTranslate: t } = useTranslate();
 const route = useRoute();
 const { id } = route.params;
 const { news: article, texts, loading, exceptionText, docTitle } = useNews(
@@ -116,8 +116,17 @@ function pause() {
 function ended() {
   paused.value = true;
 }
-function doTranslate(text: string, trans: string | undefined) {
-  return t(texts.value, text, trans);
+async function doTranslate(text: string, trans: string | undefined) {
+  if (!trans) {
+    const { list = [] } = await t(text);
+    if (list && list.length) {
+      const [first] = list
+      texts.value = texts.value.map(v => ({
+        ...v,
+        trans: v.type === 'text' && v.value === first.src ? first.dst : ''
+      }))
+    }
+  }
 }
 
 function hideTranslate() {
@@ -171,9 +180,9 @@ function touchMove(e: TouchEvent) {
   color: #666;
 }
 .transcript > p {
-  font-size: 0.74em;
+  font-size: 0.72em;
   text-indent: 2em;
-  text-align: justify;
+  line-height: 1.5;
 }
 .transcript > .title {
   margin-bottom: 0.6em;

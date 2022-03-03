@@ -1,5 +1,6 @@
 import { ref, onMounted } from "vue";
-import { News, getNewsById, parseText } from "@1r21/youyihe";
+import { type News, getNewsById } from "@1r21/api-h5";
+import { type Text, parseText } from '@1r21/util'
 
 
 export default function useNews(id: number) {
@@ -7,7 +8,7 @@ export default function useNews(id: number) {
   const exceptionText = ref("");
   const docTitle = ref("");
   const news = ref<News | null>(null);
-  const texts = ref<{ type: string; value: string; trans?: string }[]>([]);
+  const texts = ref<(Text & { trans?: string })[]>([]);
 
   onMounted(async () => {
     loading.value = true;
