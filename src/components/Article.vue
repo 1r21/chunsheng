@@ -1,6 +1,6 @@
 <template>
   <article class="post-card">
-    <img :src="place" alt="Fetch cover err" class="cover" ref="image" />
+    <img :src="place" alt="Fetch cover err" class="cover" ref="image" @error="imageErrHandle" />
     <div class="content">
       <p>{{ news.date }}</p>
       <p>{{ news.title }}</p>
@@ -11,15 +11,19 @@
 import { ref, onMounted } from "vue";
 import type { News } from "@1r21/api-h5";
 
-const places = [10, 102, 1004, 1016];
+const places = [1004, 1016];
 const rIndex = Math.floor(Math.random() * places.length);
 
 const props = defineProps<{
   news: News
 }>()
-
-const place = ref(`./place/${places[rIndex]}.jpg`);
+const genRandomImageUrl = (arr: number[]) => `./place/${arr[rIndex]}.jpg`
+const place = ref(genRandomImageUrl(places));
 const image = ref<HTMLImageElement | null>(null);
+
+function imageErrHandle() {
+  place.value = genRandomImageUrl([10, 102])
+}
 
 onMounted(() => {
   if ("IntersectionObserver" in window) {
@@ -29,8 +33,8 @@ onMounted(() => {
         if (entry.isIntersecting) {
           const lazyImage: Partial<HTMLImageElement> = entry.target;
           setTimeout(() => {
-            if (/\place\/\d+\.jpg/.test(<string>lazyImage.src)) {
-              lazyImage.src = props.news.cover;
+            if (/place\/1004|1016\.jpg/.test(<string>lazyImage.src)) {
+              place.value = props.news.cover
             }
           }, 300);
         }

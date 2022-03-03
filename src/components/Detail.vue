@@ -26,7 +26,7 @@
       </div>
       <p v-show="article?.source" class="footer">
         from:
-        <a :href="article?.source">pbs</a>
+        <a :href="article?.source" target="__blank">pbs</a>
       </p>
       <audio :src="article?.src" @ended="ended" ref="audioEl"></audio>
       <div
@@ -56,7 +56,7 @@
 </template>   
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import { translate as t } from '@1r21/api-h5'
 import { changeTitle, getMousePos } from "@1r21/util";
@@ -82,12 +82,16 @@ const boxY = ref(0);
 
 const route = useRoute();
 const { id } = route.params;
-const { news: article, texts, loading, exceptionText, docTitle } = useNews(
+const { news: article, texts, loading, exceptionText } = useNews(
   Number(id)
 );
 
-onMounted(() => {
-  changeTitle(docTitle.value);
+watchEffect(() => {
+  if (!loading.value) {
+    changeTitle(article.value?.date!);
+  } else {
+    changeTitle('loading...');
+  }
 });
 
 function getContextmenu(e: MouseEvent) {
@@ -181,7 +185,6 @@ function touchMove(e: TouchEvent) {
 }
 .transcript > p {
   font-size: 0.72em;
-  text-indent: 2em;
   line-height: 1.5;
 }
 .transcript > .title {
