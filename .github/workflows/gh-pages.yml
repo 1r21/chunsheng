@@ -25,14 +25,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - uses: actions/setup-node@v2
+        with:
+          registry-url: "https://npm.pkg.github.com"
+
       - name: Build
         env:
-          VITE_API_URL: ${{ secrets.API_URL }}
-          BASE_URL: ${{ secrets.BASE_URL }} 
+          VITE_API_HOST: ${{ secrets.API_HOST }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           yarn
           yarn build --base=$BASE_URL
-          
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
