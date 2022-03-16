@@ -37,6 +37,7 @@
         @touchmove="touchMove"
         :style="{ backgroundImage: `url(${article?.cover})` }"
       >
+        <i class="iconfont i-share" @click="wxShare" v-show="isH5plus"></i>
         <i class="iconfont i-play" v-if="paused" @click="play"></i>
         <i class="iconfont i-pause" v-else @click="pause"></i>
         <router-link to="/" custom v-slot="{ navigate }">
@@ -80,6 +81,7 @@ const startY = ref(0);
 const boxX = ref(0);
 const boxY = ref(0);
 
+const isH5plus = navigator.userAgent.indexOf("Html5Plus") > -1;
 const route = useRoute();
 const { id } = route.params;
 const { news: article, texts, loading, exceptionText } = useNews(
@@ -101,6 +103,18 @@ function getContextmenu(e: MouseEvent) {
     translateText.value = sectionText;
     translatePos.value = { x, y };
     translateBtnVisible.value = true;
+  }
+}
+
+function wxShare() {
+  if (isH5plus) {
+    //5+ 原生分享  
+    window.plusShare({
+      title: article.value?.date!,// 应用名字  
+      content: article.value?.title,
+      href: location.href,// 分享出去后，点击跳转地址  
+      thumbs: ["http://ai.1r21.cn/logo.png"] //分享缩略图  
+    });
   }
 }
 
@@ -225,5 +239,8 @@ function touchMove(e: TouchEvent) {
 }
 .action .i-home {
   color: #ffa500;
+}
+.action .i-share {
+  color: #07c160;
 }
 </style>
