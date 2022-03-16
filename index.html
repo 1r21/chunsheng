@@ -58,6 +58,39 @@
       );
     })();
   </script>
+  <script>
+    // HBuilderX web2app
+    // https://ask.dcloud.net.cn/article/36003
+    document.addEventListener('plusready', function () {
+      var first = null;
+      var webview = plus.webview.currentWebview();
+      console.log('webview', webview)
+      plus.key.addEventListener('backbutton', function () {
+        webview.canBack(function (e) {
+          if (e.canBack) {
+            webview.back();
+          } else {
+            //首次按键，提示'再按一次退出应用'
+            if (!first) {
+              first = new Date().getTime();
+
+              plus.nativeUI.toast("再按一次退出应用", {
+                duration: 'short'
+              });
+              setTimeout(function () {
+                first = null;
+              }, 1000);
+            } else {
+              //获取第二次点击的时间戳, 两次之差 小于 1000ms 说明1s点击了两次,  
+              if (new Date().getTime() - first < 1000) {
+                plus.runtime.quit(); //退出应用  
+              }
+            }
+          }
+        })
+      });
+    });
+  </script>
 </body>
 
 </html>
