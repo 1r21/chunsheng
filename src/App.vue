@@ -1,11 +1,13 @@
-<template>
-  <div class="container">
-    <router-view></router-view>
-  </div>
-</template>
-
-<style scoped>
-.container {
-  height: 100%;
-}
-</style>
+<script setup lang="ts">
+import { onLaunch, onShow, onHide } from "@dcloudio/uni-app";
+onLaunch(() => {
+  console.log("App Launch");
+});
+onShow(() => {
+  console.log("App Show");
+});
+onHide(() => {
+  console.log("App Hide");
+});
+</script>
+<style></style>

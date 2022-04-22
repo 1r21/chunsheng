@@ -1,5 +1,7 @@
 html,
-body {
+body,
+page,
+uni-page-body {
   height: 100%;
   box-sizing: border-box;
   background-color: #fff;
@@ -19,22 +21,3 @@ body {
   }
 }
 
-ul,
-li {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-p {
-  margin: 0;
-}
-
-@keyframes rotate {
-  0% {
-    transform: rotateZ(0deg);
-  }
-  100% {
-    transform: rotateZ(360deg);
-  }
-}

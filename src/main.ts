@@ -1,9 +1,12 @@
-import { createApp } from "vue";
-import "normalize.css/normalize.css";
-import router from "@/router";
-import App from "@/App.vue";
-import "@/index.css";
+import { createSSRApp } from "vue";
+import App from "./App.vue";
+import '@/utils/interceptor'
+import "@/static/index.css";
+import "@/static/iconfont.css"; 
 
-const app = createApp(App);
-app.use(router);
-app.mount("#app");
+export function createApp() {
+  const app = createSSRApp(App);
+  return {
+    app,
+  };
+}

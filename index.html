@@ -1,63 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" href="/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta property="og:title" content="I Believe" />
-  <meta property="og:url" content="http://ai.1r21.cn" />
-  <meta property="og:image" content="http://ai.1r21.cn/logo.png" />
-  <meta property="og:description" content="English news,songs etc,it is very interesting,learning for fun!" />
-  <link rel="stylesheet" href="//at.alicdn.com/t/font_2188556_cty08w6nggb.css" />
-  <title>I Believe</title>
-  <script>
-    (function () {
-      var { userAgent: ua } = navigator;
-      var isMobile = ["Android", "iPhone", "iPad", "iPod"].some(
-        (m) => ua.indexOf(m) > -1
-      );
-      if (!isMobile && !/https?:\/\/(.*)\:\d{2,4}/.test(location)) {
-        location.href = "http://bi.1r21.cn";
-      }
-    })();
-  </script>
-</head>
-
-<body>
-  <div id="app"></div>
-  <script src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.10.3/dingtalk.open.js"></script>
-  <script src="https://sdk.talkingdata.com/app/h5/v1?appid=988CCA2933B440088F7A633E84AEAF5B&vc=1.0"></script>
-  <!-- <script src="//cdn.jsdelivr.net/npm/eruda"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/static/favicon.ico" />
     <script>
-      eruda.init();
-    </script> -->
-  <script type="module" src="/src/main.ts"></script>
-  <script>
-    // http://www.backalleycoder.com/2016/05/13/sghpa-the-single-page-app-hack-for-github-pages/
-    (function () {
-      const redirect = sessionStorage.redirect;
-      delete sessionStorage.redirect;
-      if (redirect && redirect != location.href) {
-        history.replaceState(null, null, redirect);
-      }
-    })();
-
-    (function () {
-      document.addEventListener(
-        "DOMContentLoaded",
-        function () {
-          const html = document.documentElement;
-          let windowWidth = html.clientWidth;
-          const dpr = window.devicePixelRatio || 1;
-          if (windowWidth > 640) windowWidth = 640;
-          if (windowWidth < 320) windowWidth = 320;
-          html.style.fontSize = windowWidth / 7.5 / dpr + "px";
-        },
-        false
-      );
-    })();
-  </script>
-</body>
-
+      var coverSupport = 'CSS' in window && typeof CSS.supports === 'function' && (CSS.supports('top: env(a)') ||
+        CSS.supports('top: constant(a)'))
+      document.write(
+        '<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' +
+        (coverSupport ? ', viewport-fit=cover' : '') + '" />')
+    </script>
+    <title>I Believe</title>
+    <!--preload-links-->
+    <!--app-context-->
+  </head>
+  <body>
+    <div id="app"><!--app-html--></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>
