@@ -1,7 +1,7 @@
 import { ref, onMounted } from "vue";
-import { type News, getNewsById } from "@1r21/api-h5";
+import { type News } from "@1r21/api-h5";
 import { type Text, parseText } from '@1r21/util'
-
+import { request } from '@/utils/request'
 
 export default function useNews(id: number) {
   const loading = ref(false);
@@ -12,7 +12,13 @@ export default function useNews(id: number) {
   onMounted(async () => {
     loading.value = true;
     try {
-      const article = await getNewsById(String(id));
+      const article = await request('/api/news/detail', {
+        method: 'POST',
+        data: {
+          id: String(id)
+        }
+      })
+
       if (article) {
         news.value = article;
         if (article.transcript) {

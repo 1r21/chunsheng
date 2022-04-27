@@ -1,8 +1,8 @@
 <template>
-  <div class="loading-wrap" v-if="loading || error">
-    <i v-if="loading" :class="['iconfont', 'loading', `i-${icon}`, size]"></i>
-    <span v-else-if="error" class="error">{{ error }}</span>
-  </div>
+  <view class="loading-wrap" v-if="loading || error">
+    <text v-if="loading" :class="['iconfont', 'loading', `i-${icon}`, size]"></text>
+    <text v-else-if="error" class="error">{{ error }}</text>
+  </view>
   <slot v-else></slot>
 </template> 
 <script setup lang="ts">
@@ -21,7 +21,7 @@ withDefaults(defineProps<Props>(), {
 })
 </script>
 
-<style scoped>
+<style>
 .loading-wrap {
   display: flex;
   width: 100%;
@@ -35,20 +35,30 @@ withDefaults(defineProps<Props>(), {
 }
 
 .loading.default {
-  font-size: 2.4rem;
+  font-size: 100px;
 }
 
 .loading.small {
-  font-size: 1rem;
+  font-size: 80px;
 }
 
 .loading.large {
-  font-size: 3.2rem;
+  font-size: 120px;
 }
 
 .error {
   color: #999;
-  font-size: 0.8rem;
-  padding: 0.4rem 1.5rem;
+  font-size: 20px;
+  padding: 14px 16px;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateZ(360deg);
+  }
 }
 </style>

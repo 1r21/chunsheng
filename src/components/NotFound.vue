@@ -1,9 +1,9 @@
 <template>
-  <div class="content">404 Not Found</div>
+  <div class="notfound-content">404 Not Found</div>
 </template>
 
-<style scoped>
-.content {
+<style>
+.notfound-content {
   text-align: center;
   margin-top: 50%;
   color: #999;
