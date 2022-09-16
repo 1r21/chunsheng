@@ -1,11 +1,12 @@
 html,
-body {
+body,
+#__nuxt {
   height: 100%;
   box-sizing: border-box;
   background-color: #fff;
 }
 
-#app {
+main {
   height: 100%;
   margin: 0 auto;
   font-size: 1.3rem;
@@ -13,7 +14,7 @@ body {
 }
 
 @media screen and (min-width: 1024px) {
-  #app {
+  main {
     max-width: 640px;
     font-size: 0.8rem;
   }
@@ -28,13 +29,4 @@ li {
 
 p {
   margin: 0;
-}
-
-@keyframes rotate {
-  0% {
-    transform: rotateZ(0deg);
-  }
-  100% {
-    transform: rotateZ(360deg);
-  }
 }

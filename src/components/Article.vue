@@ -33,7 +33,7 @@ onMounted(() => {
         if (entry.isIntersecting) {
           const lazyImage: Partial<HTMLImageElement> = entry.target;
           setTimeout(() => {
-            if (/place\/1004|1016\.jpg/.test(<string>lazyImage.src)) {
+            if (/place\/1004|1016\.jpg/.test(lazyImage.src!)) {
               place.value = props.news.cover
             }
           }, 300);

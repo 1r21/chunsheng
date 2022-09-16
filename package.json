@@ -4,24 +4,17 @@
   "author": "iron",
   "license": "MIT",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview",
-    "docker": "yarn build && docker build -t web:taishan ."
+    "build": "nuxi build",
+    "dev": "nuxi dev",
+    "start": "nuxi preview"
   },
   "dependencies": {
     "@1r21/api-h5": "^0.0.8",
     "@1r21/util": "^0.0.8",
-    "axios": "^0.26.0",
-    "normalize.css": "^8.0.1",
-    "vue": "^3.2.31",
-    "vue-router": "^4.0.13"
+    "normalize.css": "^8.0.1"
   },
   "devDependencies": {
-    "@types/node": "^17.0.21",
-    "@vitejs/plugin-vue": "^2.2.4",
-    "@vue/compiler-sfc": "^3.2.31",
-    "typescript": "^4.6.2",
-    "vite": "^2.8.6"
+    "@types/node": "^18.7.18",
+    "nuxt": "3.0.0-rc.10"
   }
 }

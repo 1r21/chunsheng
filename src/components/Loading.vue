@@ -1,9 +1,11 @@
 <template>
-  <div class="loading-wrap" v-if="loading || error">
-    <i v-if="loading" :class="['iconfont', 'loading', `i-${icon}`, size]"></i>
-    <span v-else-if="error" class="error">{{ error }}</span>
+  <div>
+    <div class="loading-wrap" v-if="loading || error">
+      <i v-if="loading" :class="['iconfont', 'loading', `i-${icon}`, size]"></i>
+      <span v-else-if="error" class="error">{{ error }}</span>
+    </div>
+    <slot v-else></slot>
   </div>
-  <slot v-else></slot>
 </template> 
 <script setup lang="ts">
 import { withDefaults } from 'vue'
@@ -50,5 +52,16 @@ withDefaults(defineProps<Props>(), {
   color: #999;
   font-size: 0.8rem;
   padding: 0.4rem 1.5rem;
+}
+
+
+@keyframes rotate {
+  0% {
+    transform: rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateZ(360deg);
+  }
 }
 </style>

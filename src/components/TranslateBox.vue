@@ -1,5 +1,5 @@
 <template>
-  <div class="translate" :style="pos">
+  <div class="translate" :style="props.position">
     <i class="iconfont i-fanyi" v-show="btnVisible" @click="showTranslation" />
     <Loading :loading="loading" icon="translater" size="small">
       <div class="content" v-if="visible">
@@ -19,14 +19,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { type Translation, translate } from "@1r21/api-h5";
-
-import Loading from "@/components/Loading.vue";
+import { ref } from "vue";
+import { type Translation, } from "@1r21/api-h5";
 
 type Pos = {
-  x: number;
-  y: number;
+  left?: string;
+  top?: string;
+  right?: string;
+  bottom?: string;
 };
 
 interface Props {
@@ -59,29 +59,6 @@ async function showTranslation() {
   loading.value = false;
 }
 
-const pos = computed(() => {
-  const { clientWidth, clientHeight } = document.documentElement;
-  const { x: left = 0, y: top = 0 } = props.position;
-
-  const deltaX = clientWidth - left;
-  const deltaY = clientHeight - top;
-
-  const btnHeight = 40;
-  const topY = top > btnHeight ? top - btnHeight : top;
-  const bottomY = deltaY + btnHeight / 2;
-
-  if (deltaX <= left && deltaY <= top) {
-    return { bottom: `${bottomY}px`, right: `${deltaX}px` };
-  }
-  if (deltaX <= left) {
-    return { top: `${topY}px`, right: `${deltaX}px` };
-  }
-  if (deltaY <= top) {
-    return { bottom: `${bottomY}px`, left: `${left}px` };
-  }
-  return { top: `${topY}px`, left: `${left}px` };
-});
-
 </script>
 <style scoped>
 .translate {
@@ -89,11 +66,13 @@ const pos = computed(() => {
   background-color: #fefefe;
   border-radius: 0.18rem;
 }
-.translate > .i-fanyi {
+
+.translate>.i-fanyi {
   color: #666;
   padding: 0.05rem 0.1rem;
   font-size: 1em;
 }
+
 .content {
   color: #999;
   max-height: 15rem;
@@ -102,6 +81,7 @@ const pos = computed(() => {
   line-height: 1.4;
   overflow: auto;
 }
+
 .dst {
   color: #1449de;
 }
